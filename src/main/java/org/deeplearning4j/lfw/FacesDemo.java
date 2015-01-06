@@ -6,8 +6,10 @@ import org.deeplearning4j.datasets.iterator.DataSetIterator;
 import org.deeplearning4j.datasets.iterator.impl.LFWDataSetIterator;
 import org.deeplearning4j.distributions.Distributions;
 import org.deeplearning4j.models.featuredetectors.rbm.RBM;
+import org.deeplearning4j.nn.api.LayerFactory;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.layers.factory.LayerFactories;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.nd4j.linalg.api.activation.Activations;
@@ -28,10 +30,11 @@ public class FacesDemo {
         RandomGenerator gen = new MersenneTwister(123);
 
         DataSetIterator fetcher = new LFWDataSetIterator(28,28);
+        LayerFactory l = LayerFactories.getFactory(RBM.class);
 
 
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
-                .visibleUnit(RBM.VisibleUnit.GAUSSIAN).render(10)
+                .visibleUnit(RBM.VisibleUnit.GAUSSIAN).render(10).layerFactory(l)
                 .hiddenUnit(RBM.HiddenUnit.RECTIFIED).weightInit(WeightInit.DISTRIBUTION).dist(Distributions.normal(gen,1e-4))
                 .lossFunction(LossFunctions.LossFunction.RECONSTRUCTION_CROSSENTROPY).rng(gen)
                 .learningRate(1e-3f).nIn(fetcher.inputColumns()).nOut(fetcher.totalOutcomes())
