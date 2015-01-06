@@ -9,6 +9,7 @@ import org.deeplearning4j.models.featuredetectors.rbm.RBM;
 import org.deeplearning4j.nn.api.LayerFactory;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.layers.OutputLayer;
 import org.deeplearning4j.nn.layers.factory.LayerFactories;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
@@ -42,6 +43,7 @@ public class FacesDemo {
             @Override
             public void override(int i, NeuralNetConfiguration.Builder builder) {
                 if(i == 3) {
+                    builder.layerFactory(LayerFactories.getFactory(OutputLayer.class));
                     builder.weightInit(WeightInit.ZERO);
                     builder.activationFunction(Activations.softMaxRows());
                     builder.lossFunction(LossFunctions.LossFunction.MCXENT);
