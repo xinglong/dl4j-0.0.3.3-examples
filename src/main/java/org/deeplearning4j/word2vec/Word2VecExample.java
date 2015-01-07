@@ -18,7 +18,7 @@ import java.util.Collection;
 /**
  * Created by agibsonccc on 10/9/14.
  */
-public class Word2VecRawExample {
+public class Word2VecExample {
 
 
     public static void main(String[] args) throws Exception {
