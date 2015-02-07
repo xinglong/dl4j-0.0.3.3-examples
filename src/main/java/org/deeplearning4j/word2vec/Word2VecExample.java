@@ -55,7 +55,8 @@ public class Word2VecExample {
         vec.fit();
 
 
-        double sim = vec.similarity("day","night");
+        double sim = vec.similarity("people","money");
+        System.out.println("Similarity between people and money " + sim);
         Collection<String> similar = vec.wordsNearest("day",20);
         System.out.println(similar);
 

@@ -34,7 +34,7 @@ public class DBNExample {
         RandomGenerator gen = new MersenneTwister(123);
         LayerFactory l = LayerFactories.getFactory(RBM.class);
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder().weightInit(WeightInit.VI)
-                .iterations(5).layerFactory(l)
+                .iterations(1).layerFactory(l)
                 .lossFunction(LossFunctions.LossFunction.RECONSTRUCTION_CROSSENTROPY).rng(gen)
                 .learningRate(1e-1f).nIn(784).nOut(10).list(4)
                 .hiddenLayerSizes(new int[]{600, 500, 400}).override(new NeuralNetConfiguration.ConfOverride() {
@@ -58,7 +58,7 @@ public class DBNExample {
         MultiLayerNetwork network = new MultiLayerNetwork(conf);
 
 
-        DataSetIterator iter = new MultipleEpochsIterator(10,new MnistDataSetIterator(1000,1000));
+        DataSetIterator iter = new MultipleEpochsIterator(1,new MnistDataSetIterator(10,10));
         network.fit(iter);
 
 
