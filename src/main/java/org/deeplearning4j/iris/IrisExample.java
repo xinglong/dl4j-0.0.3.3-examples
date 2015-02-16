@@ -10,6 +10,7 @@ import org.deeplearning4j.models.featuredetectors.rbm.RBM;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.override.ClassifierOverride;
 import org.deeplearning4j.nn.layers.OutputLayer;
 import org.deeplearning4j.nn.layers.factory.DefaultLayerFactory;
 import org.deeplearning4j.nn.layers.factory.PretrainLayerFactory;
@@ -51,19 +52,7 @@ public class IrisExample {
                 .learningRate(1e-1f)
                 .nIn(4).nOut(3).list(2).useDropConnect(false)
                 .hiddenLayerSizes(new int[]{3})
-                .override(new NeuralNetConfiguration.ConfOverride() {
-                    @Override
-                    public void override(int i, NeuralNetConfiguration.Builder builder) {
-
-                        if (i == 1) {
-                            builder.layerFactory(new DefaultLayerFactory(OutputLayer.class));
-                            builder.weightInit(WeightInit.ZERO);
-                            builder.activationFunction(Activations.softMaxRows());
-                            builder.lossFunction(LossFunctions.LossFunction.MCXENT);
-
-                        }
-                    }
-                }).build();
+                .override(new ClassifierOverride(1)).build();
 
 
 

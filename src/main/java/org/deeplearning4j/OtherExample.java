@@ -6,6 +6,7 @@ import org.deeplearning4j.models.featuredetectors.rbm.RBM;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.override.ClassifierOverride;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.nd4j.linalg.api.activation.Activations;
@@ -47,18 +48,8 @@ public class OtherExample {
                 .rng(gen)
                 .learningRate(1e-1f)
                 .nIn(trainingSet.numInputs()).nOut(trainingSet.numOutcomes()).list(2)
-                .hiddenLayerSizes(new int[] {400})
-                .override(new NeuralNetConfiguration.ConfOverride() {
-                    @Override
-                    public void override(int i, NeuralNetConfiguration.Builder builder) {
-                        if (i == 1) {
-                            builder.iterations(1);
-                            builder.weightInit(WeightInit.ZERO);
-                            builder.activationFunction(Activations.softMaxRows());
-                            builder.lossFunction(LossFunctions.LossFunction.MCXENT);
-                        }
-                    }
-                }).build();
+                .hiddenLayerSizes(new int[]{400})
+                .override(new ClassifierOverride(3)).build();
 
         MultiLayerNetwork nn = new MultiLayerNetwork(conf);
         nn.fit(trainingSet);

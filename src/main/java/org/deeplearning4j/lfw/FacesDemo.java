@@ -6,13 +6,13 @@ import org.deeplearning4j.datasets.iterator.DataSetIterator;
 import org.deeplearning4j.datasets.iterator.impl.LFWDataSetIterator;
 import org.deeplearning4j.distributions.Distributions;
 import org.deeplearning4j.models.featuredetectors.rbm.RBM;
-import org.deeplearning4j.nn.api.LayerFactory;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.nn.layers.OutputLayer;
+import org.deeplearning4j.nn.conf.override.ConfOverride;
 import org.deeplearning4j.nn.layers.factory.LayerFactories;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
+import org.deeplearning4j.plot.iterationlistener.NeuralNetPlotterIterationListener;
 import org.nd4j.linalg.api.activation.Activations;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
@@ -31,25 +31,26 @@ public class FacesDemo {
         RandomGenerator gen = new MersenneTwister(123);
 
         DataSetIterator fetcher = new LFWDataSetIterator(28,28);
-        LayerFactory l = LayerFactories.getFactory(RBM.class);
 
 
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
-                .visibleUnit(RBM.VisibleUnit.GAUSSIAN).render(10).layerFactory(l)
-                .hiddenUnit(RBM.HiddenUnit.RECTIFIED).weightInit(WeightInit.DISTRIBUTION).dist(Distributions.normal(gen,1e-4))
+                .visibleUnit(RBM.VisibleUnit.GAUSSIAN).layerFactory(LayerFactories.getFactory(RBM.class))
+                .hiddenUnit(RBM.HiddenUnit.RECTIFIED).weightInit(WeightInit.DISTRIBUTION).dist(Distributions.normal(gen,1e-5))
                 .lossFunction(LossFunctions.LossFunction.RECONSTRUCTION_CROSSENTROPY).rng(gen)
                 .learningRate(1e-3f).nIn(fetcher.inputColumns()).nOut(fetcher.totalOutcomes())
-                .list(4).hiddenLayerSizes(new int[]{500, 250, 200}).override(new NeuralNetConfiguration.ConfOverride() {
-            @Override
-            public void override(int i, NeuralNetConfiguration.Builder builder) {
-                if(i == 3) {
-                    builder.layerFactory(LayerFactories.getFactory(OutputLayer.class));
-                    builder.weightInit(WeightInit.ZERO);
-                    builder.activationFunction(Activations.softMaxRows());
-                    builder.lossFunction(LossFunctions.LossFunction.MCXENT);
+                .list(4).hiddenLayerSizes(new int[]{600, 250, 200}).override(new ConfOverride() {
+                    @Override
+                    public void overrideLayer(int i, NeuralNetConfiguration.Builder builder) {
+                        if(i == 0)
+                            builder.iterationListener(new NeuralNetPlotterIterationListener(10));
+                        if(i == 3) {
+                            builder.weightInit(WeightInit.ZERO);
+                            builder.activationFunction(Activations.softMaxRows());
+                            builder.lossFunction(LossFunctions.LossFunction.MCXENT);
 
-                }
-            }
+                        }
+                    }
+
         }).build();
 
         MultiLayerNetwork d = new MultiLayerNetwork(conf);

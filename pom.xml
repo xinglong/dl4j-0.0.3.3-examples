@@ -8,16 +8,9 @@
     <name>DeepLearning4j Examples</name>
     <description>Examples of training different data sets</description>
     <properties>
-        <nd4j.version>0.0.3.5.5.2</nd4j.version>
-        <dl4j.version>0.0.3.3</dl4j.version>
+        <nd4j.version>0.0.3.5.5.3-SNAPSHOT</nd4j.version>
+        <dl4j.version>0.0.3.3.3.alpha1-SNAPSHOT</dl4j.version>
     </properties>
-    <repositories>
-        <repository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus snapshot repository</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </repository>
-    </repositories>
 
     <distributionManagement>
         <snapshotRepository>
@@ -34,6 +27,7 @@
 
     <dependencyManagement>
         <dependencies>
+
             <dependency>
                 <groupId>org.nd4j</groupId>
                 <artifactId>nd4j-jcublas-6.5</artifactId>
@@ -95,8 +89,9 @@
         </dependency>
         <dependency>
             <groupId>org.nd4j</groupId>
-            <artifactId>nd4j-jblas</artifactId>
+            <artifactId>nd4j-jcublas-6.5</artifactId>
         </dependency>
+
 
     </dependencies>
 </project>
