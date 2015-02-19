@@ -89,7 +89,7 @@
         </dependency>
         <dependency>
             <groupId>org.nd4j</groupId>
-            <artifactId>nd4j-jcublas-6.5</artifactId>
+            <artifactId>nd4j-jblas</artifactId>
         </dependency>
 
 
