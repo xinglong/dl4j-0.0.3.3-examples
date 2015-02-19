@@ -20,8 +20,10 @@ import org.deeplearning4j.optimize.listeners.ComposableIterationListener;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.plot.iterationlistener.NeuralNetPlotterIterationListener;
 import org.nd4j.linalg.api.activation.Activations;
+import org.nd4j.linalg.api.buffer.DataBuffer;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.jcublas.SimpleJCublas;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.slf4j.Logger;
@@ -38,16 +40,11 @@ public class DBNExample {
 
 
     public static void main(String[] args) throws Exception {
+        Nd4j.dtype = DataBuffer.FLOAT;
         RandomGenerator gen = new MersenneTwister(123);
-        SimpleJCublas.init();
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder().momentum(0.5)
                 .momentumAfter(Collections.singletonMap(3, 0.9)).layerFactory(LayerFactories.getFactory(RBM.class)).optimizationAlgo(OptimizationAlgorithm.ITERATION_GRADIENT_DESCENT)
-                .iterations(1).weightInit(WeightInit.SIZE).applySparsity(true).sparsity(0.1).iterationListener(new IterationListener() {
-                    @Override
-                    public void iterationDone(Model model, int iteration) {
-                        
-                    }
-                })
+                .iterations(1).weightInit(WeightInit.SIZE).applySparsity(true).sparsity(0.1).iterationListener(new ScoreIterationListener(10))
                 .lossFunction(LossFunctions.LossFunction.RECONSTRUCTION_CROSSENTROPY).rng(gen)
                 .learningRate(1e-1f).nIn(784).nOut(10).list(4)
                 .hiddenLayerSizes(new int[]{500, 250, 200})
@@ -57,9 +54,13 @@ public class DBNExample {
 
         MultiLayerNetwork d = new MultiLayerNetwork(conf);
         DataSetIterator iter = new MultipleEpochsIterator(3,new MnistDataSetIterator(10,60000));
-        while(iter.hasNext())
-            d.fit(iter.next());
+        while(iter.hasNext()) {
+            DataSet next = iter.next();
+             d.fit(next);
+            next.getFeatureMatrix().data().destroy();
+            next.getLabels().data().destroy();
 
+        }
 
 
         iter.reset();
