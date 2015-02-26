@@ -16,8 +16,6 @@ import org.deeplearning4j.nn.layers.factory.DefaultLayerFactory;
 import org.deeplearning4j.nn.layers.factory.PretrainLayerFactory;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
-import org.nd4j.linalg.api.activation.Activations;
-import org.nd4j.linalg.api.ndarray.DimensionSlice;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.api.ndarray.SliceOp;
 import org.nd4j.linalg.dataset.DataSet;
@@ -43,7 +41,7 @@ public class IrisExample {
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .iterations(100).layerFactory(new PretrainLayerFactory(RBM.class))
                 .weightInit(WeightInit.SIZE).dist(Distributions.normal(gen,1e-1))
-                .activationFunction(Activations.tanh()).momentum(0.9).dropOut(0.8)
+                .activationFunction("tanh").momentum(0.9).dropOut(0.8)
                 .optimizationAlgo(OptimizationAlgorithm.GRADIENT_DESCENT)
                 .constrainGradientToUnitNorm(true).k(5).regularization(true).l2(2e-4)
                 .visibleUnit(RBM.VisibleUnit.GAUSSIAN).hiddenUnit(RBM.HiddenUnit.RECTIFIED)

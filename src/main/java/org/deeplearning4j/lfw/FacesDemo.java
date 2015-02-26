@@ -13,7 +13,6 @@ import org.deeplearning4j.nn.layers.factory.LayerFactories;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.plot.iterationlistener.NeuralNetPlotterIterationListener;
-import org.nd4j.linalg.api.activation.Activations;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.slf4j.Logger;
@@ -45,7 +44,7 @@ public class FacesDemo {
                             builder.iterationListener(new NeuralNetPlotterIterationListener(10));
                         if(i == 3) {
                             builder.weightInit(WeightInit.ZERO);
-                            builder.activationFunction(Activations.softMaxRows());
+                            builder.activationFunction("softmax");
                             builder.lossFunction(LossFunctions.LossFunction.MCXENT);
 
                         }
