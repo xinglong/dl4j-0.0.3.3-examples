@@ -1,6 +1,5 @@
 package org.deeplearning4j.word2vec;
 
-import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.word2vec.Word2Vec;
 import org.deeplearning4j.plot.Tsne;
 import org.deeplearning4j.text.sentenceiterator.LineSentenceIterator;
@@ -12,7 +11,6 @@ import org.deeplearning4j.text.tokenization.tokenizerfactory.DefaultTokenizerFac
 import org.deeplearning4j.text.tokenization.tokenizerfactory.TokenizerFactory;
 import org.springframework.core.io.ClassPathResource;
 
-import java.io.File;
 import java.util.Collection;
 
 /**
@@ -63,11 +61,10 @@ public class Word2VecExample {
 
 
 
-        //vec.plotTsne();
         Tsne tsne = new Tsne.Builder().setMaxIter(200)
                 .learningRate(500).useAdaGrad(false)
                 .normalize(false).usePca(false).build();
-        WordVectorSerializer.writeTsneFormat(vec, tsne.getY(), new File("coords.csv"));
+
 
         vec.lookupTable().plotVocab(tsne);
 
