@@ -43,7 +43,7 @@ public class DBNExample {
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder().momentum(0.5)
                 .momentumAfter(Collections.singletonMap(3, 0.9)).layerFactory(LayerFactories.getFactory(RBM.class)).optimizationAlgo(OptimizationAlgorithm.ITERATION_GRADIENT_DESCENT)
                 .iterations(1).weightInit(WeightInit.SIZE).applySparsity(true).sparsity(0.1).iterationListener(new ScoreIterationListener(10))
-                .lossFunction(LossFunctions.LossFunction.RECONSTRUCTION_CROSSENTROPY).rng(gen)
+                .lossFunction(LossFunctions.LossFunction.RECONSTRUCTION_CROSSENTROPY)
                 .learningRate(1e-1f).nIn(784).nOut(10).list(4)
                 .hiddenLayerSizes(new int[]{500, 250, 200})
                 .override(new ClassifierOverride(3))

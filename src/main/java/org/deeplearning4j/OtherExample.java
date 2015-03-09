@@ -44,7 +44,6 @@ public class OtherExample {
                 .hiddenUnit(RBM.HiddenUnit.RECTIFIED)
                 .lossFunction(LossFunctions.LossFunction.RECONSTRUCTION_CROSSENTROPY)
                 .optimizationAlgo(OptimizationAlgorithm.ITERATION_GRADIENT_DESCENT)
-                .rng(gen)
                 .learningRate(1e-1f)
                 .nIn(trainingSet.numInputs()).nOut(trainingSet.numOutcomes()).list(2)
                 .hiddenLayerSizes(new int[]{400})

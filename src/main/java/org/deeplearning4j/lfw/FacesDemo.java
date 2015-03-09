@@ -4,7 +4,6 @@ import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.random.RandomGenerator;
 import org.deeplearning4j.datasets.iterator.DataSetIterator;
 import org.deeplearning4j.datasets.iterator.impl.LFWDataSetIterator;
-import org.deeplearning4j.distributions.Distributions;
 import org.deeplearning4j.models.featuredetectors.rbm.RBM;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
@@ -14,6 +13,7 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.plot.iterationlistener.NeuralNetPlotterIterationListener;
 import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,22 +27,21 @@ public class FacesDemo {
 
 
     public static void main(String[] args) throws Exception {
-        RandomGenerator gen = new MersenneTwister(123);
 
         DataSetIterator fetcher = new LFWDataSetIterator(28,28);
 
 
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .visibleUnit(RBM.VisibleUnit.GAUSSIAN).layerFactory(LayerFactories.getFactory(RBM.class))
-                .hiddenUnit(RBM.HiddenUnit.RECTIFIED).weightInit(WeightInit.DISTRIBUTION).dist(Distributions.normal(gen,1e-5))
-                .lossFunction(LossFunctions.LossFunction.RECONSTRUCTION_CROSSENTROPY).rng(gen)
+                .hiddenUnit(RBM.HiddenUnit.RECTIFIED).weightInit(WeightInit.DISTRIBUTION).dist(Nd4j.getDistributions().createNormal(1e-5,1))
+                .lossFunction(LossFunctions.LossFunction.RECONSTRUCTION_CROSSENTROPY)
                 .learningRate(1e-3f).nIn(fetcher.inputColumns()).nOut(fetcher.totalOutcomes())
                 .list(4).hiddenLayerSizes(new int[]{600, 250, 200}).override(new ConfOverride() {
                     @Override
                     public void overrideLayer(int i, NeuralNetConfiguration.Builder builder) {
-                        if(i == 0)
+                        if (i == 0)
                             builder.iterationListener(new NeuralNetPlotterIterationListener(10));
-                        if(i == 3) {
+                        if (i == 3) {
                             builder.weightInit(WeightInit.ZERO);
                             builder.activationFunction("softmax");
                             builder.lossFunction(LossFunctions.LossFunction.MCXENT);
@@ -50,7 +49,7 @@ public class FacesDemo {
                         }
                     }
 
-        }).build();
+                }).build();
 
         MultiLayerNetwork d = new MultiLayerNetwork(conf);
 

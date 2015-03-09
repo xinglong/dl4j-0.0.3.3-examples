@@ -32,7 +32,7 @@ public class DBNExample {
 
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder().weightInit(WeightInit.VI)
                 .iterations(5).layerFactory(LayerFactories.getFactory(RBM.class))
-                .lossFunction(LossFunctions.LossFunction.RECONSTRUCTION_CROSSENTROPY).rng(gen)
+                .lossFunction(LossFunctions.LossFunction.RECONSTRUCTION_CROSSENTROPY)
                 .learningRate(1e-1f).nIn(784).nOut(10).list(4)
                 .hiddenLayerSizes(new int[]{600, 500, 400})
                 .build();
