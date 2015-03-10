@@ -40,7 +40,7 @@ public class DBNExample {
     public static void main(String[] args) throws Exception {
         Nd4j.dtype = DataBuffer.FLOAT;
         RandomGenerator gen = new MersenneTwister(123);
-        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder().momentum(0.5)
+        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder().momentum(0.5).layerFactory(LayerFactories.getFactory(RBM.class))
                 .momentumAfter(Collections.singletonMap(3, 0.9)).layerFactory(LayerFactories.getFactory(RBM.class)).optimizationAlgo(OptimizationAlgorithm.ITERATION_GRADIENT_DESCENT)
                 .iterations(1).weightInit(WeightInit.SIZE).applySparsity(true).sparsity(0.1).iterationListener(new ScoreIterationListener(10))
                 .lossFunction(LossFunctions.LossFunction.RECONSTRUCTION_CROSSENTROPY)
