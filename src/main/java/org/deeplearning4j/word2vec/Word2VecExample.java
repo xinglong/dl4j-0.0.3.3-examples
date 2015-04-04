@@ -62,8 +62,8 @@ public class Word2VecExample {
 
 
 
-        BarnesHutTsne tsne = new BarnesHutTsne.Builder().setMaxIter(200)
-                .learningRate(200).useAdaGrad(false).theta(0.5)
+        Tsne tsne = new Tsne.Builder().setMaxIter(200)
+                .learningRate(200).useAdaGrad(false)
                 .normalize(false).usePca(false).build();
 
 
