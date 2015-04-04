@@ -1,6 +1,7 @@
 package org.deeplearning4j.word2vec;
 
 import org.deeplearning4j.models.word2vec.Word2Vec;
+import org.deeplearning4j.plot.BarnesHutTsne;
 import org.deeplearning4j.plot.Tsne;
 import org.deeplearning4j.text.sentenceiterator.LineSentenceIterator;
 import org.deeplearning4j.text.sentenceiterator.SentenceIterator;
@@ -37,8 +38,8 @@ public class Word2VecExample {
             public String preProcess(String token) {
                 token = token.toLowerCase();
                 String base = preProcessor.preProcess(token);
-                base = base.replaceAll("\\d","d");
-                if(base.endsWith("ly") || base.endsWith("ing"))
+                base = base.replaceAll("\\d", "d");
+                if (base.endsWith("ly") || base.endsWith("ing"))
                     System.out.println();
                 return base;
             }
@@ -53,7 +54,7 @@ public class Word2VecExample {
         vec.fit();
 
 
-        double sim = vec.similarity("people","money");
+        double sim = vec.similarity("people", "money");
         System.out.println("Similarity between people and money " + sim);
         Collection<String> similar = vec.wordsNearest("day",20);
         System.out.println(similar);
@@ -61,8 +62,8 @@ public class Word2VecExample {
 
 
 
-        Tsne tsne = new Tsne.Builder().setMaxIter(200)
-                .learningRate(500).useAdaGrad(false)
+        BarnesHutTsne tsne = new BarnesHutTsne.Builder().setMaxIter(200)
+                .learningRate(200).useAdaGrad(false).theta(0.5)
                 .normalize(false).usePca(false).build();
 
 

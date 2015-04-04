@@ -4,6 +4,7 @@ import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.random.RandomGenerator;
 import org.deeplearning4j.datasets.iterator.DataSetIterator;
 import org.deeplearning4j.datasets.iterator.MultipleEpochsIterator;
+import org.deeplearning4j.datasets.iterator.impl.ListDataSetIterator;
 import org.deeplearning4j.datasets.iterator.impl.MnistDataSetIterator;
 import org.deeplearning4j.eval.Evaluation;
 import org.deeplearning4j.models.featuredetectors.rbm.RBM;
@@ -28,7 +29,6 @@ public class DBNExample {
 
 
     public static void main(String[] args) throws Exception {
-        RandomGenerator gen = new MersenneTwister(123);
 
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder().weightInit(WeightInit.VI)
                 .iterations(5).layerFactory(LayerFactories.getFactory(RBM.class))
@@ -54,6 +54,7 @@ public class DBNExample {
         while(iter.hasNext()) {
 
             DataSet d2 = iter.next();
+
             INDArray predict2 = network.output(d2.getFeatureMatrix());
 
             eval.eval(d2.getLabels(), predict2);
