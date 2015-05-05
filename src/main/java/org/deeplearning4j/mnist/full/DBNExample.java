@@ -13,6 +13,7 @@ import org.deeplearning4j.nn.layers.factory.LayerFactories;
 import org.deeplearning4j.nn.layers.feedforward.rbm.RBM;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
+import org.deeplearning4j.optimize.api.IterationListener;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.nd4j.linalg.api.buffer.DataBuffer;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -22,6 +23,7 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -47,7 +49,7 @@ public class DBNExample {
 
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder().momentum(0.5).layerFactory(LayerFactories.getFactory(RBM.class))
                 .momentumAfter(Collections.singletonMap(3, 0.9)).optimizationAlgo(OptimizationAlgorithm.CONJUGATE_GRADIENT)
-                .iterations(5).weightInit(WeightInit.DISTRIBUTION).dist(new UniformDistribution(0,1)).iterationListener(new ScoreIterationListener(1))
+                .iterations(5).weightInit(WeightInit.DISTRIBUTION).dist(new UniformDistribution(0,1))
                 .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
                 .learningRate(1e-1f).nIn(784).nOut(10).list(4)
                 .hiddenLayerSizes(new int[]{500, 250, 200})
@@ -56,6 +58,7 @@ public class DBNExample {
 
 
         MultiLayerNetwork d = new MultiLayerNetwork(conf);
+        d.setIterationListeners(Arrays.<IterationListener>asList(new ScoreIterationListener(1)));
         DataSetIterator iter = new MnistDataSetIterator(100,60000);
         while(iter.hasNext()) {
             DataSet next = iter.next();
@@ -78,8 +81,6 @@ public class DBNExample {
         }
 
         log.info(eval.stats());
-
-
     }
 
 }

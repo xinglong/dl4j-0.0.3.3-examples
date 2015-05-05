@@ -13,6 +13,7 @@ import org.deeplearning4j.nn.layers.factory.PretrainLayerFactory;
 import org.deeplearning4j.nn.layers.feedforward.rbm.RBM;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
+import org.deeplearning4j.optimize.api.IterationListener;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
@@ -23,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-
+import java.util.Arrays;
 
 /**
  * Created by agibsonccc on 9/12/14.
@@ -44,16 +45,14 @@ public class IrisExample {
                 .constrainGradientToUnitNorm(true).k(1).regularization(true).l2(2e-4)
                 .visibleUnit(RBM.VisibleUnit.GAUSSIAN).hiddenUnit(RBM.HiddenUnit.RECTIFIED)
                 .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
-                .learningRate(1e-1f).iterationListener(new ScoreIterationListener(2))
+                .learningRate(1e-1f)
                 .nIn(4).nOut(3).list(2)
                 .hiddenLayerSizes(new int[]{3})
                 .override(new ClassifierOverride(1)).build();
 
 
-
-
-
         MultiLayerNetwork d = new MultiLayerNetwork(conf);
+        d.setIterationListeners(Arrays.<IterationListener>asList(new ScoreIterationListener(2)));
 
 
         DataSetIterator iter = new IrisDataSetIterator(150, 150);
@@ -68,9 +67,6 @@ public class IrisExample {
         DataSet train = testAndTrain.getTrain();
 
         d.fit(train);
-
-
-
 
         DataSet test = testAndTrain.getTest();
 
