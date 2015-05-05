@@ -31,7 +31,7 @@ public class DBNExample {
     public static void main(String[] args) throws Exception {
 
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder().weightInit(WeightInit.VI)
-                .iterations(5).layerFactory(LayerFactories.getFactory(RBM.class))
+                .iterations(5).layer(new org.deeplearning4j.nn.conf.layers.RBM())
                 .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
                 .learningRate(1e-1f).nIn(784).nOut(10).list(4)
                 .hiddenLayerSizes(new int[]{600, 500, 400})

@@ -11,12 +11,15 @@ import org.deeplearning4j.nn.layers.factory.LayerFactories;
 import org.deeplearning4j.nn.layers.feedforward.rbm.RBM;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
+import org.deeplearning4j.optimize.api.IterationListener;
 import org.deeplearning4j.plot.iterationlistener.NeuralNetPlotterIterationListener;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
 
 
 /**
@@ -32,13 +35,14 @@ public class FacesDemo {
 
 
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
-                .visibleUnit(RBM.VisibleUnit.GAUSSIAN).layerFactory(LayerFactories.getFactory(RBM.class))
-                .hiddenUnit(RBM.HiddenUnit.RECTIFIED).weightInit(WeightInit.DISTRIBUTION).dist(new UniformDistribution(0,1))
-                .lossFunction(LossFunctions.LossFunction.RMSE_XENT).iterationListener(new NeuralNetPlotterIterationListener(1))
+                .visibleUnit(RBM.VisibleUnit.GAUSSIAN).layer(new org.deeplearning4j.nn.conf.layers.RBM())
+                .hiddenUnit(RBM.HiddenUnit.RECTIFIED).weightInit(WeightInit.DISTRIBUTION).dist(new UniformDistribution(0, 1))
+                .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
                 .learningRate(1e-3f).nIn(fetcher.inputColumns()).nOut(fetcher.totalOutcomes())
                 .list(4).hiddenLayerSizes(new int[]{600, 250, 200}).override(new ClassifierOverride(3)).build();
 
         MultiLayerNetwork d = new MultiLayerNetwork(conf);
+        d.setListeners(Arrays.asList((IterationListener) new NeuralNetPlotterIterationListener(1)));
 
         while(fetcher.hasNext()) {
             DataSet next = fetcher.next();
