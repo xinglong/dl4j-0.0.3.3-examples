@@ -4,16 +4,16 @@ package org.deeplearning4j.mnist.full;
 import org.deeplearning4j.datasets.iterator.DataSetIterator;
 import org.deeplearning4j.datasets.iterator.impl.MnistDataSetIterator;
 import org.deeplearning4j.eval.Evaluation;
-import org.deeplearning4j.models.featuredetectors.rbm.RBM;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.distribution.UniformDistribution;
 import org.deeplearning4j.nn.conf.override.ClassifierOverride;
 import org.deeplearning4j.nn.layers.factory.LayerFactories;
+import org.deeplearning4j.nn.layers.feedforward.rbm.RBM;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
-import org.nd4j.instrumentation.server.InstrumentationApplication;
 import org.nd4j.linalg.api.buffer.DataBuffer;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
@@ -47,7 +47,7 @@ public class DBNExample {
 
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder().momentum(0.5).layerFactory(LayerFactories.getFactory(RBM.class))
                 .momentumAfter(Collections.singletonMap(3, 0.9)).optimizationAlgo(OptimizationAlgorithm.CONJUGATE_GRADIENT)
-                .iterations(5).weightInit(WeightInit.DISTRIBUTION).dist(Nd4j.getDistributions().createUniform(0, 1)).iterationListener(new ScoreIterationListener(1))
+                .iterations(5).weightInit(WeightInit.DISTRIBUTION).dist(new UniformDistribution(0,1)).iterationListener(new ScoreIterationListener(1))
                 .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
                 .learningRate(1e-1f).nIn(784).nOut(10).list(4)
                 .hiddenLayerSizes(new int[]{500, 250, 200})

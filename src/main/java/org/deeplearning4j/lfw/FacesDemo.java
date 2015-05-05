@@ -1,15 +1,14 @@
 package org.deeplearning4j.lfw;
 
-import org.apache.commons.math3.random.MersenneTwister;
-import org.apache.commons.math3.random.RandomGenerator;
+
 import org.deeplearning4j.datasets.iterator.DataSetIterator;
 import org.deeplearning4j.datasets.iterator.impl.LFWDataSetIterator;
-import org.deeplearning4j.models.featuredetectors.rbm.RBM;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.distribution.UniformDistribution;
 import org.deeplearning4j.nn.conf.override.ClassifierOverride;
-import org.deeplearning4j.nn.conf.override.ConfOverride;
 import org.deeplearning4j.nn.layers.factory.LayerFactories;
+import org.deeplearning4j.nn.layers.feedforward.rbm.RBM;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.plot.iterationlistener.NeuralNetPlotterIterationListener;
@@ -34,7 +33,7 @@ public class FacesDemo {
 
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .visibleUnit(RBM.VisibleUnit.GAUSSIAN).layerFactory(LayerFactories.getFactory(RBM.class))
-                .hiddenUnit(RBM.HiddenUnit.RECTIFIED).weightInit(WeightInit.DISTRIBUTION).dist(Nd4j.getDistributions().createUniform(0,1))
+                .hiddenUnit(RBM.HiddenUnit.RECTIFIED).weightInit(WeightInit.DISTRIBUTION).dist(new UniformDistribution(0,1))
                 .lossFunction(LossFunctions.LossFunction.RMSE_XENT).iterationListener(new NeuralNetPlotterIterationListener(1))
                 .learningRate(1e-3f).nIn(fetcher.inputColumns()).nOut(fetcher.totalOutcomes())
                 .list(4).hiddenLayerSizes(new int[]{600, 250, 200}).override(new ClassifierOverride(3)).build();
@@ -47,6 +46,7 @@ public class FacesDemo {
             d.fit(next);
 
         }
+
 
 
     }

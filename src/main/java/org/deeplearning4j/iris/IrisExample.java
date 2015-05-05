@@ -4,12 +4,13 @@ package org.deeplearning4j.iris;
 import org.deeplearning4j.datasets.iterator.DataSetIterator;
 import org.deeplearning4j.datasets.iterator.impl.IrisDataSetIterator;
 import org.deeplearning4j.eval.Evaluation;
-import org.deeplearning4j.models.featuredetectors.rbm.RBM;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.distribution.UniformDistribution;
 import org.deeplearning4j.nn.conf.override.ClassifierOverride;
 import org.deeplearning4j.nn.layers.factory.PretrainLayerFactory;
+import org.deeplearning4j.nn.layers.feedforward.rbm.RBM;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
@@ -37,7 +38,7 @@ public class IrisExample {
         Nd4j.MAX_ELEMENTS_PER_SLICE = -1;
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .iterations(100).layerFactory(new PretrainLayerFactory(RBM.class))
-                .weightInit(WeightInit.DISTRIBUTION).dist(Nd4j.getDistributions().createUniform(0,1))
+                .weightInit(WeightInit.DISTRIBUTION).dist(new UniformDistribution(0,1))
                 .activationFunction("tanh").momentum(0.9)
                 .optimizationAlgo(OptimizationAlgorithm.LBFGS)
                 .constrainGradientToUnitNorm(true).k(1).regularization(true).l2(2e-4)

@@ -25,12 +25,33 @@
         </repository>
     </distributionManagement>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-ui</artifactId>
+            <version>${dl4j.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-nlp</artifactId>
+            <version>${dl4j.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.nd4j</groupId>
+            <artifactId>nd4j-jblas</artifactId>
+            <version>${nd4j.version}</version>
+        </dependency>
+
+
+    </dependencies>
     <dependencyManagement>
         <dependencies>
 
             <dependency>
                 <groupId>org.nd4j</groupId>
-                <artifactId>nd4j-jcublas-6.5</artifactId>
+                <artifactId>nd4j-jblas</artifactId>
                 <version>${nd4j.version}</version>
             </dependency>
             <dependency>
@@ -117,24 +138,4 @@
         </plugins>
     </build>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.nd4j</groupId>
-            <artifactId>nd4j-instrumentation</artifactId>
-            <version>${nd4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.deeplearning4j</groupId>
-            <artifactId>deeplearning4j-nlp</artifactId>
-            <version>${dl4j.version}</version>
-
-        </dependency>
-        <dependency>
-            <groupId>org.nd4j</groupId>
-            <artifactId>nd4j-jblas</artifactId>
-            <version>${nd4j.version}</version>
-        </dependency>
-
-
-    </dependencies>
 </project>

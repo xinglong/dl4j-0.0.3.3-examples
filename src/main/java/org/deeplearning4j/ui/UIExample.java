@@ -1,8 +1,8 @@
-package org.deeplearning4j.word2vec;
+package org.deeplearning4j.ui;
 
+import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.word2vec.Word2Vec;
 import org.deeplearning4j.plot.BarnesHutTsne;
-import org.deeplearning4j.plot.Tsne;
 import org.deeplearning4j.text.sentenceiterator.LineSentenceIterator;
 import org.deeplearning4j.text.sentenceiterator.SentenceIterator;
 import org.deeplearning4j.text.sentenceiterator.SentencePreProcessor;
@@ -18,10 +18,9 @@ import java.io.File;
 import java.util.Collection;
 
 /**
- * Created by agibsonccc on 10/9/14.
+ * @author Adam Gibson
  */
-public class Word2VecExample {
-
+public class UIExample {
 
     public static void main(String[] args) throws Exception {
         ClassPathResource resource = new ClassPathResource("raw_sentences.txt");
@@ -55,24 +54,8 @@ public class Word2VecExample {
                 .iterations(3).learningRate(0.025).minLearningRate(1e-2).negativeSample(10)
                 .iterate(iter).tokenizerFactory(t).build();
         vec.fit();
-
-
-        double sim = vec.similarity("people", "money");
-        System.out.println("Similarity between people and money " + sim);
-        Collection<String> similar = vec.wordsNearest("day", 20);
-        System.out.println(similar);
-
-
-        Nd4j.ENFORCE_NUMERICAL_STABILITY = true;
-
-        BarnesHutTsne tsne = new BarnesHutTsne.Builder().setMaxIter(1000).stopLyingIteration(250)
-                .learningRate(500).useAdaGrad(false).theta(0.5).setMomentum(0.5)
-                .normalize(true).usePca(false).build();
-
-        SerializationUtils.saveObject(vec.lookupTable(),new File("lookuptabledemo.ser"));
-        vec.lookupTable().plotVocab(tsne);
-
-
+        WordVectorSerializer.writeWordVectors(vec, "words.txt");
+        UiServer.main(null);
 
     }
 
