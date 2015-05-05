@@ -8,16 +8,9 @@
     <name>DeepLearning4j Examples</name>
     <description>Examples of training different data sets</description>
     <properties>
-        <nd4j.version>0.0.3.5.6-SNAPSHOT</nd4j.version>
-        <dl4j.version>0.0.3.3</dl4j.version>
+        <nd4j.version>0.0.3.5.5.3-SNAPSHOT</nd4j.version>
+        <dl4j.version>0.0.3.3.3.alpha1-SNAPSHOT</dl4j.version>
     </properties>
-    <repositories>
-        <repository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus snapshot repository</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </repository>
-    </repositories>
 
     <distributionManagement>
         <snapshotRepository>
@@ -32,11 +25,33 @@
         </repository>
     </distributionManagement>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-ui</artifactId>
+            <version>${dl4j.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-nlp</artifactId>
+            <version>${dl4j.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.nd4j</groupId>
+            <artifactId>nd4j-jblas</artifactId>
+            <version>${nd4j.version}</version>
+        </dependency>
+
+
+    </dependencies>
     <dependencyManagement>
         <dependencies>
+
             <dependency>
                 <groupId>org.nd4j</groupId>
-                <artifactId>nd4j-jcublas-6.5</artifactId>
+                <artifactId>nd4j-jblas</artifactId>
                 <version>${nd4j.version}</version>
             </dependency>
             <dependency>
@@ -59,6 +74,43 @@
     <build>
 
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.6</version>
+                <configuration>
+                    <createDependencyReducedPom>true</createDependencyReducedPom>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>org/datanucleus/**</exclude>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>reference.conf</resource>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
@@ -85,18 +137,5 @@
             </plugin>
         </plugins>
     </build>
-    <dependencies>
 
-        <dependency>
-            <groupId>org.deeplearning4j</groupId>
-            <artifactId>deeplearning4j-nlp</artifactId>
-            <version>${dl4j.version}</version>
-
-        </dependency>
-        <dependency>
-            <groupId>org.nd4j</groupId>
-            <artifactId>nd4j-jblas</artifactId>
-        </dependency>
-
-    </dependencies>
 </project>

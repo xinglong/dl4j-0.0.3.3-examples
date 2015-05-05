@@ -6,14 +6,13 @@ import org.deeplearning4j.datasets.iterator.DataSetIterator;
 import org.deeplearning4j.datasets.iterator.MultipleEpochsIterator;
 import org.deeplearning4j.datasets.iterator.impl.MnistDataSetIterator;
 import org.deeplearning4j.eval.Evaluation;
-import org.deeplearning4j.models.featuredetectors.rbm.RBM;
-import org.deeplearning4j.nn.api.LayerFactory;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.override.ClassifierOverride;
 import org.deeplearning4j.nn.layers.factory.LayerFactories;
+import org.deeplearning4j.nn.layers.feedforward.rbm.RBM;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
-import org.nd4j.linalg.api.activation.Activations;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
@@ -31,27 +30,13 @@ public class DBNExample {
 
     public static void main(String[] args) throws Exception {
         RandomGenerator gen = new MersenneTwister(123);
-        LayerFactory l = LayerFactories.getFactory(RBM.class);
 
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder().weightInit(WeightInit.VI)
-                .iterations(5).layerFactory(l)
-                .lossFunction(LossFunctions.LossFunction.RECONSTRUCTION_CROSSENTROPY).rng(gen)
+                .iterations(5).layerFactory(LayerFactories.getFactory(RBM.class))
+                .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
                 .learningRate(1e-1f).nIn(784).nOut(10).list(4)
                 .hiddenLayerSizes(new int[]{600, 500, 400})
-                .override(new NeuralNetConfiguration.ConfOverride() {
-                    @Override
-                    public void override(int i, NeuralNetConfiguration.Builder builder) {
-                        if (i == 3) {
-                            builder.weightInit(WeightInit.ZERO);
-                            builder.activationFunction(Activations.softMaxRows());
-                            builder.lossFunction(LossFunctions.LossFunction.MCXENT);
-
-                        }
-
-                        //if(i == 0)
-                          //  builder.render(10);
-                    }
-                })
+                .override(new ClassifierOverride(3))
                 .build();
 
 

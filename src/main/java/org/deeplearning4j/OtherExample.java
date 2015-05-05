@@ -2,13 +2,14 @@ package org.deeplearning4j;
 
 import org.apache.commons.math3.random.MersenneTwister;
 import org.deeplearning4j.eval.Evaluation;
-import org.deeplearning4j.models.featuredetectors.rbm.RBM;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.override.ClassifierOverride;
+import org.deeplearning4j.nn.layers.factory.LayerFactories;
+import org.deeplearning4j.nn.layers.feedforward.rbm.RBM;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
-import org.nd4j.linalg.api.activation.Activations;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
@@ -39,26 +40,15 @@ public class OtherExample {
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .iterations(3)
                 .weightInit(WeightInit.SIZE)
-                .activationFunction(Activations.tanh())
+                .activationFunction("tanh").layerFactory(LayerFactories.getFactory(RBM.class))
                 .visibleUnit(RBM.VisibleUnit.GAUSSIAN)
                 .hiddenUnit(RBM.HiddenUnit.RECTIFIED)
                 .lossFunction(LossFunctions.LossFunction.RECONSTRUCTION_CROSSENTROPY)
                 .optimizationAlgo(OptimizationAlgorithm.ITERATION_GRADIENT_DESCENT)
-                .rng(gen)
                 .learningRate(1e-1f)
                 .nIn(trainingSet.numInputs()).nOut(trainingSet.numOutcomes()).list(2)
-                .hiddenLayerSizes(new int[] {400})
-                .override(new NeuralNetConfiguration.ConfOverride() {
-                    @Override
-                    public void override(int i, NeuralNetConfiguration.Builder builder) {
-                        if (i == 1) {
-                            builder.iterations(1);
-                            builder.weightInit(WeightInit.ZERO);
-                            builder.activationFunction(Activations.softMaxRows());
-                            builder.lossFunction(LossFunctions.LossFunction.MCXENT);
-                        }
-                    }
-                }).build();
+                .hiddenLayerSizes(new int[]{400})
+                .override(new ClassifierOverride(3)).build();
 
         MultiLayerNetwork nn = new MultiLayerNetwork(conf);
         nn.fit(trainingSet);
