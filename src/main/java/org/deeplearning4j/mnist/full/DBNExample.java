@@ -7,6 +7,7 @@ import org.deeplearning4j.eval.Evaluation;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.distribution.NormalDistribution;
 import org.deeplearning4j.nn.conf.distribution.UniformDistribution;
 import org.deeplearning4j.nn.conf.override.ClassifierOverride;
 import org.deeplearning4j.nn.layers.factory.LayerFactories;
@@ -35,21 +36,12 @@ public class DBNExample {
 
 
     public static void main(String[] args) throws Exception {
-        Nd4j.dtype = DataBuffer.FLOAT;
-//        Nd4j.shouldInstrument = true;
-//        Thread t = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                InstrumentationApplication app = new InstrumentationApplication();
-//                app.start();
-//            }
-//        });
-//        t.start();
+        Nd4j.dtype = DataBuffer.Type.FLOAT;
 
 
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder().momentum(0.5).layer(new org.deeplearning4j.nn.conf.layers.RBM())
                 .momentumAfter(Collections.singletonMap(3, 0.9)).optimizationAlgo(OptimizationAlgorithm.CONJUGATE_GRADIENT)
-                .iterations(5).weightInit(WeightInit.DISTRIBUTION).dist(new UniformDistribution(0,1))
+                .iterations(5).weightInit(WeightInit.DISTRIBUTION).dist(new NormalDistribution(0,1))
                 .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
                 .learningRate(1e-1f).nIn(784).nOut(10).list(4)
                 .hiddenLayerSizes(new int[]{500, 250, 200})
@@ -58,6 +50,7 @@ public class DBNExample {
 
 
         MultiLayerNetwork d = new MultiLayerNetwork(conf);
+        d.init();
         d.setListeners(Arrays.asList((IterationListener) new ScoreIterationListener(1)));
         DataSetIterator iter = new MnistDataSetIterator(100,60000);
         while(iter.hasNext()) {

@@ -1,5 +1,6 @@
-package org.deeplearning4j.word2vec;
+package org.deeplearning4j.nlp;
 
+import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.word2vec.Word2Vec;
 import org.deeplearning4j.plot.BarnesHutTsne;
 import org.deeplearning4j.plot.Tsne;
@@ -69,8 +70,8 @@ public class Word2VecExample {
                 .learningRate(500).useAdaGrad(false).theta(0.5).setMomentum(0.5)
                 .normalize(true).usePca(false).build();
 
-        SerializationUtils.saveObject(vec.lookupTable(),new File("lookuptabledemo.ser"));
-        vec.lookupTable().plotVocab(tsne);
+        SerializationUtils.saveObject(vec,new File("vec.ser"));
+        WordVectorSerializer.writeWordVectors(vec,"words.txt");
 
 
 
