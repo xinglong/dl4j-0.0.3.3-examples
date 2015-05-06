@@ -38,8 +38,8 @@ public class IrisExample {
         Nd4j.MAX_SLICES_TO_PRINT = -1;
         Nd4j.MAX_ELEMENTS_PER_SLICE = -1;
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
-                .iterations(100).layer(new org.deeplearning4j.nn.conf.layers.RBM())
-                .weightInit(WeightInit.DISTRIBUTION).dist(new UniformDistribution(0,1))
+                .iterations(100).layer(new RBM())
+                .weightInit(WeightInit.DISTRIBUTION).dist(new UniformDistribution(0, 1))
                 .activationFunction("tanh").momentum(0.9)
                 .optimizationAlgo(OptimizationAlgorithm.LBFGS)
                 .constrainGradientToUnitNorm(true).k(1).regularization(true).l2(2e-4)
@@ -51,17 +51,15 @@ public class IrisExample {
                 .override(new ClassifierOverride(1)).build();
 
 
-
-
-
         MultiLayerNetwork d = new MultiLayerNetwork(conf);
+        d.init();
         d.setListeners(Arrays.asList((IterationListener) new ScoreIterationListener(1)));
 
         DataSetIterator iter = new IrisDataSetIterator(150, 150);
 
         DataSet next = iter.next();
 
-        Nd4j.writeTxt(next.getFeatureMatrix(),"iris.txt","\t");
+        Nd4j.writeTxt(next.getFeatureMatrix(), "iris.txt", "\t");
 
         next.normalizeZeroMeanZeroUnitVariance();
 
@@ -70,11 +68,7 @@ public class IrisExample {
 
         d.fit(train);
 
-
-
-
         DataSet test = testAndTrain.getTest();
-
 
         Evaluation eval = new Evaluation();
         INDArray output = d.output(test.getFeatureMatrix());
