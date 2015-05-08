@@ -1,5 +1,6 @@
-package org.deeplearning4j.word2vec;
+package org.deeplearning4j.nlp;
 
+import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.word2vec.Word2Vec;
 import org.deeplearning4j.plot.BarnesHutTsne;
 import org.deeplearning4j.plot.Tsne;
@@ -10,8 +11,11 @@ import org.deeplearning4j.text.tokenization.tokenizer.TokenPreProcess;
 import org.deeplearning4j.text.tokenization.tokenizer.preprocessor.EndingPreProcessor;
 import org.deeplearning4j.text.tokenization.tokenizerfactory.DefaultTokenizerFactory;
 import org.deeplearning4j.text.tokenization.tokenizerfactory.TokenizerFactory;
+import org.deeplearning4j.util.SerializationUtils;
+import org.nd4j.linalg.factory.Nd4j;
 import org.springframework.core.io.ClassPathResource;
 
+import java.io.File;
 import java.util.Collection;
 
 /**
@@ -56,18 +60,18 @@ public class Word2VecExample {
 
         double sim = vec.similarity("people", "money");
         System.out.println("Similarity between people and money " + sim);
-        Collection<String> similar = vec.wordsNearest("day",20);
+        Collection<String> similar = vec.wordsNearest("day", 20);
         System.out.println(similar);
 
 
+        Nd4j.ENFORCE_NUMERICAL_STABILITY = true;
 
+        BarnesHutTsne tsne = new BarnesHutTsne.Builder().setMaxIter(1000).stopLyingIteration(250)
+                .learningRate(500).useAdaGrad(false).theta(0.5).setMomentum(0.5)
+                .normalize(true).usePca(false).build();
 
-        Tsne tsne = new Tsne.Builder().setMaxIter(200)
-                .learningRate(200).useAdaGrad(false)
-                .normalize(false).usePca(false).build();
-
-
-        vec.lookupTable().plotVocab(tsne);
+        SerializationUtils.saveObject(vec,new File("vec.ser"));
+        WordVectorSerializer.writeWordVectors(vec,"words.txt");
 
 
 
