@@ -10,6 +10,8 @@
     <properties>
         <nd4j.version>0.0.3.5.5.3</nd4j.version>
         <dl4j.version>0.0.3.3.3.alpha1</dl4j.version>
+        <canova.version>0.0.0.2</canova.version>
+
     </properties>
 
     <distributionManagement>
@@ -43,7 +45,11 @@
             <artifactId>nd4j-jcublas-7.0</artifactId>
             <version>${nd4j.version}</version>
         </dependency>
-
+        <dependency>
+            <artifactId>canova-nd4j-image</artifactId>
+            <groupId>org.nd4j</groupId>
+            <version>${canova.version}</version>
+        </dependency>
 
     </dependencies>
     <dependencyManagement>
