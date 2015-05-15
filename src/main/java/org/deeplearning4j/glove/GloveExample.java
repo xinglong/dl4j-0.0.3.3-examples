@@ -20,6 +20,8 @@ import org.springframework.core.io.ClassPathResource;
 import java.util.Collection;
 
 /**
+ * Global Vectors for Word Representation (http://nlp.stanford.edu/projects/glove/)
+ *
  * Created by agibsonccc on 10/9/14.
  */
 public class GloveExample {
