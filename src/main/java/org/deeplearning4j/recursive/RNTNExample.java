@@ -111,6 +111,7 @@ public class RNTNExample {
 //        ???
 //        log.info("Score " + eval.stats());
 
-    }
+        }
 
+    }
 }
