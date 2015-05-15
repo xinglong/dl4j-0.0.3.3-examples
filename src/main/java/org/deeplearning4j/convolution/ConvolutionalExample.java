@@ -47,36 +47,38 @@ public class ConvolutionalExample {
 
         final int numRows = 28;
         final int numColumns = 28;
-        int batchSize = 1802;
+        int batchSize = 10; // TODO return to 1802
 
 //      load data
-        DataSetIterator mnist = new MnistDataSetIterator(100,1000);
+        DataSetIterator mnist = new MnistDataSetIterator(100,100); // TODO change back to 100,1000 (batch, numExamples) - there are 60k avail
         DataSet all = mnist.next();
 
 //      split data
 //        all.normalizeZeroMeanZeroUnitVariance(); - still needed?
-        SplitTestAndTrain trainTest = all.splitTestAndTrain(900); // train set that is the result - should flip
-        INDArray trainInput = trainTest.getTrain().getFeatureMatrix();
+        SplitTestAndTrain trainTest = all.splitTestAndTrain(90); // train set that is the result - should flip // TODO put back to 80% of data
+        DataSet trainInput = trainTest.getTrain(); // get feature matrix and labels for training
         INDArray testInput = trainTest.getTest().getFeatureMatrix();
         INDArray testLabels = trainTest.getTest().getLabels();
 
 //      build model - conv + subsample
+        // TODO iterations back to 10
+        // TODO try the if then without the input and preprocess for all layers
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .optimizationAlgo(OptimizationAlgorithm.LBFGS)
-                .iterations(10).weightInit(WeightInit.VI).constrainGradientToUnitNorm(true)
-                .activationFunction("sigmoid").filterSize(5, 1, numRows, numColumns)
+                .iterations(2).weightInit(WeightInit.VI).constrainGradientToUnitNorm(true)
+                .activationFunction("sigmoid").filterSize(batchSize, 1, numRows, numColumns)
                 .nIn(numRows * numColumns).nOut(10).batchSize(batchSize)
                 .list(3)
-                .inputPreProcessor(0,new ConvolutionInputPreProcessor(numRows,numColumns))
-                .preProcessor(1, new ConvolutionPostProcessor())
+                .inputPreProcessor(0, new ConvolutionInputPreProcessor(numRows, numColumns)).preProcessor(1, new ConvolutionPostProcessor())
                 .hiddenLayerSizes(new int[]{32})
                 .override(0, new ConfOverride() {
                     public void overrideLayer(int i, NeuralNetConfiguration.Builder builder) {
                         builder.layer(new ConvolutionLayer());
                         builder.convolutionType(ConvolutionDownSampleLayer.ConvolutionType.MAX);
-                        builder.featureMapSize(9,9);
+                        builder.featureMapSize(9, 9);
+
                     }
-                }).override(1,new ConfOverride() {
+                }).override(1, new ConfOverride() {
                     public void overrideLayer(int i, NeuralNetConfiguration.Builder builder) {
                         builder.layer(new SubsamplingLayer());
 
@@ -97,8 +99,8 @@ public class ConvolutionalExample {
         Evaluation eval = new Evaluation();
         INDArray output = network.output(testInput);
         eval.eval(testLabels,output);
-        System.out.println("Score " +eval.stats());
-        log.info("Score " +eval.stats());
+//        System.out.println("Score " +eval.stats());
+//        log.info("Score " +eval.stats());
 
     }
 }

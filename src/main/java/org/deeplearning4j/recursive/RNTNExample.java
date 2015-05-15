@@ -1,9 +1,8 @@
-package org.deeplearning4j.rntn;
+package org.deeplearning4j.recursive;
 
 import org.canova.api.records.reader.impl.CSVRecordReader;
 import org.canova.api.split.FileSplit;
 import org.canova.api.writable.Writable;
-import org.deeplearning4j.eval.Evaluation;
 import org.deeplearning4j.models.embeddings.WeightLookupTable;
 import org.deeplearning4j.models.embeddings.inmemory.InMemoryLookupTable;
 import org.deeplearning4j.models.rntn.RNTN;
@@ -14,27 +13,22 @@ import org.deeplearning4j.nn.layers.feedforward.autoencoder.recursive.Tree;
 import org.deeplearning4j.text.corpora.treeparser.TreeVectorizer;
 import org.deeplearning4j.text.invertedindex.InvertedIndex;
 import org.deeplearning4j.text.invertedindex.LuceneInvertedIndex;
-import org.deeplearning4j.text.sentenceiterator.CollectionSentenceIterator;
-import org.deeplearning4j.text.sentenceiterator.LineSentenceIterator;
-import org.deeplearning4j.text.sentenceiterator.SentenceIterator;
 import org.deeplearning4j.text.sentenceiterator.labelaware.LabelAwareFileSentenceIterator;
 import org.deeplearning4j.text.sentenceiterator.labelaware.LabelAwareSentenceIterator;
 import org.deeplearning4j.text.tokenization.tokenizerfactory.TokenizerFactory;
 import org.deeplearning4j.text.tokenization.tokenizerfactory.UimaTokenizerFactory;
-import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.dataset.DataSet;
-import org.nd4j.linalg.dataset.SplitTestAndTrain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 
 /**
+ * Recursive Neural Tensor Network (RNTN)
+ *
  * Created by willow on 5/11/15.
  */
 public class RNTNExample {
