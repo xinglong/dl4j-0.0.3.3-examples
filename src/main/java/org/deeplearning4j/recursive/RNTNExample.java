@@ -49,7 +49,9 @@ public class RNTNExample {
         // use word2vec as a lookup - feed rntn consitnuency tables - parse - sentence iterator that iterates through corpus
         // get corpus and feed into sentence iterator, fit vectors, loop and fit rntn
         String fileName = "tweets_clean.txt";
+
         LabelAwareSentenceIterator iter = new LabelAwareFileSentenceIterator(new File(fileName));
+
         Word2Vec vec;
         TokenizerFactory tokenizerFactory = new UimaTokenizerFactory(false);
         VocabCache cache = new InMemoryLookupCache();
