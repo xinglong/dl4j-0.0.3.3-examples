@@ -48,7 +48,7 @@ public class IrisExample {
                 .learningRate(1e-1f)
                 .nIn(4).nOut(3).list(2)
                 .hiddenLayerSizes(new int[]{3})
-                .override(new ClassifierOverride(1)).build();
+                .override(1, new ClassifierOverride(1)).build();
 
 
         MultiLayerNetwork d = new MultiLayerNetwork(conf);
