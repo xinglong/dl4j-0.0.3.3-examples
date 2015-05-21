@@ -1,15 +1,21 @@
 package org.deeplearning4j.recurrent;
 
 import org.deeplearning4j.datasets.fetchers.MnistDataFetcher;
+import org.deeplearning4j.eval.Evaluation;
+import org.deeplearning4j.nn.api.Layer;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
+import org.deeplearning4j.nn.conf.layers.LSTM;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.layers.factory.LayerFactories;
-import org.deeplearning4j.nn.layers.recurrent.LSTM;
+//import org.deeplearning4j.nn.layers.recurrent.LSTM;
 import org.deeplearning4j.optimize.api.IterationListener;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.util.Arrays;
 
@@ -19,26 +25,31 @@ import java.util.Arrays;
 
 public class RecurrentLSTMExample {
 
+    private static Logger log = LoggerFactory.getLogger(RecurrentLSTMExample.class);
+
     public static void main(String[] args) throws Exception {
 
-//      load data
+        log.info("Loading data...");
         MnistDataFetcher fetcher = new MnistDataFetcher(true);
-        fetcher.fetch(1000);
+        fetcher.fetch(10);
         DataSet d2 = fetcher.next();
         INDArray input = d2.getFeatureMatrix();
 
-//      build model
-
+        log.info("Building model...");
         NeuralNetConfiguration conf = new NeuralNetConfiguration.Builder().activationFunction("tanh")
-                .layer(new org.deeplearning4j.nn.conf.layers.LSTM()).optimizationAlgo(OptimizationAlgorithm.LBFGS)
+                .layer(new LSTM()).optimizationAlgo(OptimizationAlgorithm.LBFGS)
                 .lossFunction(LossFunctions.LossFunction.RECONSTRUCTION_CROSSENTROPY)
-                .nIn(784).nOut(10).build();
-        LSTM l = LayerFactories.getFactory(conf.getLayer()).create(conf, Arrays.<IterationListener>asList(new ScoreIterationListener(10)));
+                .nIn(784).nOut(784).build();
+        Layer layer = LayerFactories.getFactory(conf.getLayer()).create(conf);
+        layer.setIterationListeners(Arrays.<IterationListener>asList(new ScoreIterationListener(1)));
 
-//      train model
+        log.info("Training model...");
+        layer.fit(input);
 
-        l.fit(input);
-
+        log.info("Evaluating model...");
+        Evaluation eval = new Evaluation();
+        eval.eval(d2.getLabels(), layer.preOutput(d2.getFeatureMatrix()));
+        log.info(eval.stats());
     // Generative Model - unsupervised and its time series based which requires different evaluation technique
 
     }
