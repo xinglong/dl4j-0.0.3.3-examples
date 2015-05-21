@@ -24,6 +24,7 @@ import java.util.Arrays;
  * Created by agibsonccc on 10/2/14.
  *
  * lfw? Faces without Names
+ * Need evaluation?
  */
 public class FacesDemo {
     private static Logger log = LoggerFactory.getLogger(FacesDemo.class);
@@ -31,23 +32,27 @@ public class FacesDemo {
 
     public static void main(String[] args) throws Exception {
 
+        log.info("Load data....");
         DataSetIterator fetcher = new LFWDataSetIterator(28,28);
 
-
+        log.info("Build model....");
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
-                .visibleUnit(RBM.VisibleUnit.GAUSSIAN).layer(new org.deeplearning4j.nn.conf.layers.RBM())
-                .hiddenUnit(RBM.HiddenUnit.RECTIFIED).weightInit(WeightInit.DISTRIBUTION).dist(new UniformDistribution(0, 1))
+                .layer(new RBM()).nIn(fetcher.inputColumns()).nOut(fetcher.totalOutcomes())
+                .visibleUnit(RBM.VisibleUnit.GAUSSIAN).hiddenUnit(RBM.HiddenUnit.RECTIFIED)
+                .weightInit(WeightInit.DISTRIBUTION).dist(new UniformDistribution(0, 1))
                 .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
-                .learningRate(1e-3f).nIn(fetcher.inputColumns()).nOut(fetcher.totalOutcomes())
-                .list(4).hiddenLayerSizes(new int[]{600, 250, 200}).override(new ClassifierOverride(3)).build();
+                .learningRate(1e-3f)
+                .list(4).hiddenLayerSizes(new int[]{600, 250, 200})
+                .override(new ClassifierOverride(3))
+                .build();
+        MultiLayerNetwork model = new MultiLayerNetwork(conf);
+        model.setListeners(Arrays.asList((IterationListener) new NeuralNetPlotterIterationListener(1)));
 
-        MultiLayerNetwork d = new MultiLayerNetwork(conf);
-        d.setListeners(Arrays.asList((IterationListener) new NeuralNetPlotterIterationListener(1)));
-
+        log.info("Train model....");
         while(fetcher.hasNext()) {
             DataSet next = fetcher.next();
             next.normalizeZeroMeanZeroUnitVariance();
-            d.fit(next);
+            model.fit(next);
 
         }
 

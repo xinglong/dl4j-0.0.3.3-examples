@@ -28,51 +28,53 @@ import java.util.Arrays;
 
 /**
  * Created by agibsonccc on 9/12/14.
+ *
+ * ? Output layer not a instance of output layer returning ?
+ *
  */
 public class IrisExample {
-
 
     private static Logger log = LoggerFactory.getLogger(IrisExample.class);
 
     public static void main(String[] args) throws IOException {
+        // Customizing params
         Nd4j.MAX_SLICES_TO_PRINT = -1;
         Nd4j.MAX_ELEMENTS_PER_SLICE = -1;
-        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
-                .iterations(100).layer(new RBM())
-                .weightInit(WeightInit.DISTRIBUTION).dist(new UniformDistribution(0, 1))
-                .activationFunction("tanh").momentum(0.9)
-                .optimizationAlgo(OptimizationAlgorithm.LBFGS)
-                .constrainGradientToUnitNorm(true).k(1).regularization(true).l2(2e-4)
-                .visibleUnit(RBM.VisibleUnit.GAUSSIAN).hiddenUnit(RBM.HiddenUnit.RECTIFIED)
-                .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
-                .learningRate(1e-1f)
-                .nIn(4).nOut(3).list(2)
-                .hiddenLayerSizes(new int[]{3})
-                .override(new ClassifierOverride(1)).build();
 
-
-        MultiLayerNetwork d = new MultiLayerNetwork(conf);
-        d.init();
-        d.setListeners(Arrays.asList((IterationListener) new ScoreIterationListener(1)));
-
+        log.info("Load data....");
         DataSetIterator iter = new IrisDataSetIterator(150, 150);
-
         DataSet next = iter.next();
-
         Nd4j.writeTxt(next.getFeatureMatrix(), "iris.txt", "\t");
-
         next.normalizeZeroMeanZeroUnitVariance();
 
+        log.info("Split data....");
         SplitTestAndTrain testAndTrain = next.splitTestAndTrain(110);
         DataSet train = testAndTrain.getTrain();
-
-        d.fit(train);
-
         DataSet test = testAndTrain.getTest();
 
+        log.info("Build model....");
+        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
+                .layer(new RBM()).nIn(4).nOut(3)
+                .visibleUnit(RBM.VisibleUnit.GAUSSIAN).hiddenUnit(RBM.HiddenUnit.RECTIFIED)
+                .iterations(100).weightInit(WeightInit.DISTRIBUTION).dist(new UniformDistribution(0, 1))
+                .activationFunction("tanh").k(1)
+                .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
+                .learningRate(1e-1f).momentum(0.9).regularization(true).l2(2e-4)
+                .optimizationAlgo(OptimizationAlgorithm.LBFGS).constrainGradientToUnitNorm(true)
+                .list(2).hiddenLayerSizes(new int[]{3})
+                .override(new ClassifierOverride(1))
+                .build();
+        MultiLayerNetwork model = new MultiLayerNetwork(conf);
+        model.init();
+        model.setListeners(Arrays.asList((IterationListener) new ScoreIterationListener(1)));
+
+        log.info("Train model....");
+        model.fit(train);
+
+        log.info("Evaluate model....");
         Evaluation eval = new Evaluation();
-        INDArray output = d.output(test.getFeatureMatrix());
+        INDArray output = model.output(test.getFeatureMatrix());
         eval.eval(test.getLabels(),output);
-        log.info("Score " + eval.stats());
+        log.info(eval.stats());
     }
 }

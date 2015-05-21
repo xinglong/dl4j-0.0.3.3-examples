@@ -7,6 +7,7 @@ import org.deeplearning4j.datasets.iterator.impl.MnistDataSetIterator;
 import org.deeplearning4j.eval.Evaluation;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.layers.RBM;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -26,39 +27,30 @@ public class SmallDBNExample {
 
     public static void main(String[] args) throws Exception {
 
-        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder().weightInit(WeightInit.VI)
-                .iterations(5).layer(new org.deeplearning4j.nn.conf.layers.RBM())
-                .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
-                .learningRate(1e-1f).nIn(784).nOut(10).list(4)
-                .hiddenLayerSizes(new int[]{600, 500, 400})
-                .build();
-
-
-
-
-        MultiLayerNetwork network = new MultiLayerNetwork(conf);
-
-
+        log.info("Load data....");
         DataSetIterator iter = new MultipleEpochsIterator(10,new MnistDataSetIterator(1000,1000));
-        network.fit(iter);
 
+        log.info("Build model....");
+        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
+                .layer(new RBM()).nIn(784).nOut(10).weightInit(WeightInit.VI).iterations(5)
+                .lossFunction(LossFunctions.LossFunction.RMSE_XENT).learningRate(1e-1f)
+                .list(4).hiddenLayerSizes(new int[]{600, 500, 400})
+                .build();
+        MultiLayerNetwork model = new MultiLayerNetwork(conf);
 
+        log.info("Train model....");
+        model.fit(iter);
         iter.reset();
 
+        log.info("Evaluate model....");
         Evaluation eval = new Evaluation();
-
         while(iter.hasNext()) {
-
-            DataSet d2 = iter.next();
-
-            INDArray predict2 = network.output(d2.getFeatureMatrix());
-
-            eval.eval(d2.getLabels(), predict2);
-
+            DataSet test_data = iter.next();
+            INDArray predict2 = model.output(test_data.getFeatureMatrix());
+            eval.eval(test_data.getLabels(), predict2);
         }
-
         log.info(eval.stats());
-
+        log.info("****************Example finished********************");
 
     }
 
