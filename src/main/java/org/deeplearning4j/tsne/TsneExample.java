@@ -21,7 +21,7 @@ public class TsneExample {
         Tsne tsne = new Tsne.Builder().setMaxIter(10000)
                 .learningRate(500).useAdaGrad(false)
                 .normalize(false).usePca(false).build();
-        Pair<WeightLookupTable,VocabCache> info = WordVectorSerializer.loadTxt(new File(args[0]));
+        Pair<InMemoryLookupTable,VocabCache> info = WordVectorSerializer.loadTxt(new File(args[0]));
         VocabCache cache = info.getSecond();
         List<String> list = new ArrayList<>();
         for(int i = 0; i < cache.numWords(); i++)
