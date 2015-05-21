@@ -46,10 +46,6 @@ public class RecurrentLSTMExample {
         log.info("Training model...");
         layer.fit(input);
 
-        log.info("Evaluating model...");
-        Evaluation eval = new Evaluation();
-        eval.eval(d2.getLabels(), layer.preOutput(d2.getFeatureMatrix()));
-        log.info(eval.stats());
     // Generative Model - unsupervised and its time series based which requires different evaluation technique
 
     }
