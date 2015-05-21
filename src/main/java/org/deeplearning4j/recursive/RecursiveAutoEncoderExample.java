@@ -1,11 +1,11 @@
 package org.deeplearning4j.recursive;
 
 import org.deeplearning4j.datasets.fetchers.MnistDataFetcher;
-import org.deeplearning4j.eval.Evaluation;
+import org.deeplearning4j.nn.api.Layer;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.layers.RecursiveAutoEncoder;
 import org.deeplearning4j.nn.layers.factory.LayerFactories;
-import org.deeplearning4j.nn.layers.feedforward.autoencoder.recursive.RecursiveAutoEncoder;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.api.IterationListener;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
@@ -41,15 +41,15 @@ public class RecursiveAutoEncoderExample {
                 .iterations(10)
                 .lossFunction(LossFunctions.LossFunction.RECONSTRUCTION_CROSSENTROPY)
                 .learningRate(1e-1f).nIn(784).nOut(600)
-                .layer(new org.deeplearning4j.nn.conf.layers.RecursiveAutoEncoder())
+                .layer(new RecursiveAutoEncoder())
                 .build();
 
         log.info("Training model...");
-        RecursiveAutoEncoder model = LayerFactories.getFactory(conf).create(conf);
+        Layer model = LayerFactories.getFactory(conf).create(conf);
         model.setIterationListeners(Arrays.<IterationListener>asList(new ScoreIterationListener(1)));
         model.setParams(model.params());
         model.fit(input);
-        
+
         // Generative Model - unsupervised and requires different evaluation technique
 
     }
