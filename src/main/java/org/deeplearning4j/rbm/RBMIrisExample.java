@@ -32,9 +32,9 @@ import java.util.Arrays;
  * ? Output layer not a instance of output layer returning ?
  *
  */
-public class IrisExample {
+public class RBMIrisExample {
 
-    private static Logger log = LoggerFactory.getLogger(IrisExample.class);
+    private static Logger log = LoggerFactory.getLogger(RBMIrisExample.class);
 
     public static void main(String[] args) throws IOException {
         // Customizing params

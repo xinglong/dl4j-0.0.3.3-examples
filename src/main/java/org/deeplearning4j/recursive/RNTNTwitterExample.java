@@ -31,8 +31,8 @@ import java.util.List;
  *
  * Created by willow on 5/11/15.
  */
-public class RNTNExample {
-    private static final Logger log = LoggerFactory.getLogger(RNTNExample.class);
+public class RNTNTwitterExample {
+    private static final Logger log = LoggerFactory.getLogger(RNTNTwitterExample.class);
 
     public static void main(String[] args) throws Exception {
 

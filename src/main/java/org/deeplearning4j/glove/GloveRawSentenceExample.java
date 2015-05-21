@@ -25,9 +25,9 @@ import java.util.Collection;
  *
  * Created by agibsonccc on 10/9/14.
  */
-public class GloveExample {
+public class GloveRawSentenceExample {
 
-    private static Logger log = LoggerFactory.getLogger(GloveExample.class);
+    private static Logger log = LoggerFactory.getLogger(GloveRawSentenceExample.class);
 
     public static void main(String[] args) throws Exception {
         // Customizing params

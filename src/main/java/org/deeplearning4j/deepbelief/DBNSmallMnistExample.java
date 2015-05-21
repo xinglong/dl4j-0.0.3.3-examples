@@ -20,9 +20,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by agibsonccc on 9/11/14.
  */
-public class SmallDBNExample {
+public class DBNSmallMnistExample {
 
-    private static Logger log = LoggerFactory.getLogger(SmallDBNExample.class);
+    private static Logger log = LoggerFactory.getLogger(DBNSmallMnistExample.class);
 
 
     public static void main(String[] args) throws Exception {

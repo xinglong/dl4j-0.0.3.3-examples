@@ -11,9 +11,9 @@ import java.io.File;
 /**
  * Created by agibsonccc on 10/9/14.
  */
-public class ReadTextTSNEExample {
+public class TSNEReadTextExample {
 
-    private static Logger log = LoggerFactory.getLogger(ReadTextTSNEExample.class);
+    private static Logger log = LoggerFactory.getLogger(TSNEReadTextExample.class);
 
     public static void main(String[] args) throws Exception {
 

@@ -16,9 +16,9 @@ import java.util.List;
 /**
  * Created by agibsonccc on 9/20/14.
  */
-public class TsneExample {
+public class TSNECreateDataExample {
 
-    private static Logger log = LoggerFactory.getLogger(TsneExample.class);
+    private static Logger log = LoggerFactory.getLogger(TSNECreateDataExample.class);
 
     public static void main(String[] args) throws Exception  {
         List<String> cacheList = new ArrayList<>();
@@ -27,7 +27,7 @@ public class TsneExample {
         Tsne tsne = new Tsne.Builder().setMaxIter(10000)
                 .learningRate(500).useAdaGrad(false)
                 .normalize(false).usePca(false).build();
-        
+
         log.info("Vectorize data....");
         Pair<InMemoryLookupTable,VocabCache> vectors = WordVectorSerializer.loadTxt(new File(args[0]));
         VocabCache cache = vectors.getSecond();

@@ -20,12 +20,11 @@ import java.util.Arrays;
 /**
  * Created by willow on 5/11/15.
  */
-public class RecursiveAutoEncoderExample {
+public class RecursiveAutoEncoderMnistExample {
 
-    private static Logger log = LoggerFactory.getLogger(RecursiveAutoEncoderExample.class);
+    private static Logger log = LoggerFactory.getLogger(RecursiveAutoEncoderMnistExample.class);
 
     public static void main(String[] args) throws Exception {
-
 
         log.info("Loading data...");
         MnistDataFetcher fetcher = new MnistDataFetcher(true);

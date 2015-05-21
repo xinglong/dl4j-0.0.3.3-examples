@@ -22,12 +22,9 @@ import java.util.Arrays;
 
 /**
  * Created by agibsonccc on 10/2/14.
- *
- * lfw? Faces without Names
- * Need evaluation?
- */
-public class FacesDemo {
-    private static Logger log = LoggerFactory.getLogger(FacesDemo.class);
+ **/
+public class RBMLFWExample {
+    private static Logger log = LoggerFactory.getLogger(RBMLFWExample.class);
 
 
     public static void main(String[] args) throws Exception {

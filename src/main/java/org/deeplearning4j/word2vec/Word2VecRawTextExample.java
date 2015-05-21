@@ -22,9 +22,9 @@ import java.util.Collection;
 /**
  * Created by agibsonccc on 10/9/14.
  */
-public class RawTextWord2VecExample {
+public class Word2VecRawTextExample {
 
-    private static Logger log = LoggerFactory.getLogger(RawTextWord2VecExample.class);
+    private static Logger log = LoggerFactory.getLogger(Word2VecRawTextExample.class);
 
     public static void main(String[] args) throws Exception {
         // Customizing params
