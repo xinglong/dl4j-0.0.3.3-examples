@@ -1,8 +1,7 @@
-package org.deeplearning4j.glove;
+package org.deeplearning4j.autoencoder;
 
 import org.deeplearning4j.bagofwords.vectorizer.TextVectorizer;
 import org.deeplearning4j.bagofwords.vectorizer.TfidfVectorizer;
-import org.deeplearning4j.berkeley.Pair;
 import org.deeplearning4j.models.glove.CoOccurrences;
 import org.deeplearning4j.models.glove.Glove;
 import org.deeplearning4j.models.glove.GloveWeightLookupTable;

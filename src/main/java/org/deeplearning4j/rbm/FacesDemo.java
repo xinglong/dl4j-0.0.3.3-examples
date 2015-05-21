@@ -1,4 +1,4 @@
-package org.deeplearning4j.lfw;
+package org.deeplearning4j.rbm;
 
 
 import org.deeplearning4j.datasets.iterator.DataSetIterator;
@@ -22,6 +22,8 @@ import java.util.Arrays;
 
 /**
  * Created by agibsonccc on 10/2/14.
+ *
+ * lfw? Faces without Names
  */
 public class FacesDemo {
     private static Logger log = LoggerFactory.getLogger(FacesDemo.class);

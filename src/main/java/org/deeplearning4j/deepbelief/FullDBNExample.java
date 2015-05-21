@@ -1,4 +1,4 @@
-package org.deeplearning4j.mnist.full;
+package org.deeplearning4j.deepbelief;
 
 
 import org.deeplearning4j.datasets.iterator.DataSetIterator;
@@ -8,10 +8,7 @@ import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.distribution.NormalDistribution;
-import org.deeplearning4j.nn.conf.distribution.UniformDistribution;
 import org.deeplearning4j.nn.conf.override.ClassifierOverride;
-import org.deeplearning4j.nn.layers.factory.LayerFactories;
-import org.deeplearning4j.nn.layers.feedforward.rbm.RBM;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.api.IterationListener;
@@ -30,9 +27,9 @@ import java.util.Collections;
 /**
  * Created by agibsonccc on 9/11/14.
  */
-public class DBNExample {
+public class FullDBNExample {
 
-    private static Logger log = LoggerFactory.getLogger(DBNExample.class);
+    private static Logger log = LoggerFactory.getLogger(FullDBNExample.class);
 
 
     public static void main(String[] args) throws Exception {

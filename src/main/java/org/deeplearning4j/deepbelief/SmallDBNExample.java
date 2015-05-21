@@ -1,4 +1,4 @@
-package org.deeplearning4j.reconstruct;
+package org.deeplearning4j.deepbelief;
 
 
 import org.deeplearning4j.datasets.iterator.DataSetIterator;
@@ -7,8 +7,6 @@ import org.deeplearning4j.datasets.iterator.impl.MnistDataSetIterator;
 import org.deeplearning4j.eval.Evaluation;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.nn.conf.layers.RBM;
-import org.deeplearning4j.nn.conf.override.ClassifierOverride;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -21,19 +19,18 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by agibsonccc on 9/11/14.
  */
-public class DBNExample {
+public class SmallDBNExample {
 
-    private static Logger log = LoggerFactory.getLogger(DBNExample.class);
+    private static Logger log = LoggerFactory.getLogger(SmallDBNExample.class);
 
 
     public static void main(String[] args) throws Exception {
 
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder().weightInit(WeightInit.VI)
-                .iterations(5).layer(new RBM())
+                .iterations(5).layer(new org.deeplearning4j.nn.conf.layers.RBM())
                 .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
                 .learningRate(1e-1f).nIn(784).nOut(10).list(4)
                 .hiddenLayerSizes(new int[]{600, 500, 400})
-                .override(new ClassifierOverride(3))
                 .build();
 
 
@@ -53,6 +50,7 @@ public class DBNExample {
         while(iter.hasNext()) {
 
             DataSet d2 = iter.next();
+
             INDArray predict2 = network.output(d2.getFeatureMatrix());
 
             eval.eval(d2.getLabels(), predict2);

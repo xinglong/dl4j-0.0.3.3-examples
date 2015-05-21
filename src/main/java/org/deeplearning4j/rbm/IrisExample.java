@@ -1,4 +1,4 @@
-package org.deeplearning4j.iris;
+package org.deeplearning4j.rbm;
 
 
 import org.deeplearning4j.datasets.iterator.DataSetIterator;
