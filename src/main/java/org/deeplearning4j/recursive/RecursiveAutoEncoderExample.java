@@ -1,6 +1,7 @@
 package org.deeplearning4j.recursive;
 
 import org.deeplearning4j.datasets.fetchers.MnistDataFetcher;
+import org.deeplearning4j.eval.Evaluation;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.layers.factory.LayerFactories;
@@ -11,6 +12,8 @@ import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
@@ -19,17 +22,18 @@ import java.util.Arrays;
  */
 public class RecursiveAutoEncoderExample {
 
+    private static Logger log = LoggerFactory.getLogger(RecursiveAutoEncoderExample.class);
+
     public static void main(String[] args) throws Exception {
 
-//      load data
 
+        log.info("Loading data...");
         MnistDataFetcher fetcher = new MnistDataFetcher(true);
-        fetcher.fetch(100);
+        fetcher.fetch(10);
         DataSet d2 = fetcher.next();
         INDArray input = d2.getFeatureMatrix();
 
-//      build model
-
+        log.info("Building model...");
         NeuralNetConfiguration conf = new NeuralNetConfiguration.Builder()
                 .momentum(0.9f)
                 .optimizationAlgo(OptimizationAlgorithm.ITERATION_GRADIENT_DESCENT)
@@ -40,13 +44,12 @@ public class RecursiveAutoEncoderExample {
                 .layer(new org.deeplearning4j.nn.conf.layers.RecursiveAutoEncoder())
                 .build();
 
-//      train model
-
-        RecursiveAutoEncoder model = LayerFactories.getFactory(conf).create(conf,
-                Arrays.<IterationListener>asList(new ScoreIterationListener(10)));
+        log.info("Training model...");
+        RecursiveAutoEncoder model = LayerFactories.getFactory(conf).create(conf);
+        model.setIterationListeners(Arrays.<IterationListener>asList(new ScoreIterationListener(1)));
         model.setParams(model.params());
         model.fit(input);
-
+        
         // Generative Model - unsupervised and requires different evaluation technique
 
     }
