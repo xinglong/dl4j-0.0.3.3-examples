@@ -1,4 +1,4 @@
-package org.deeplearning4j.autoencoder;
+package org.deeplearning4j.glove;
 
 import org.deeplearning4j.bagofwords.vectorizer.TextVectorizer;
 import org.deeplearning4j.bagofwords.vectorizer.TfidfVectorizer;
@@ -14,6 +14,8 @@ import org.deeplearning4j.text.tokenization.tokenizer.preprocessor.EndingPreProc
 import org.deeplearning4j.text.tokenization.tokenizerfactory.DefaultTokenizerFactory;
 import org.deeplearning4j.text.tokenization.tokenizerfactory.TokenizerFactory;
 import org.nd4j.linalg.factory.Nd4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 
 import java.util.Collection;
@@ -25,8 +27,15 @@ import java.util.Collection;
  */
 public class GloveExample {
 
+    private static Logger log = LoggerFactory.getLogger(GloveExample.class);
 
     public static void main(String[] args) throws Exception {
+        // Customizing params
+        Nd4j.ENFORCE_NUMERICAL_STABILITY = true;
+        int layerSize = 300;
+        final EndingPreProcessor preProcessor = new EndingPreProcessor();
+
+        log.info("Load data....");
         ClassPathResource resource = new ClassPathResource("raw_sentences.txt");
         SentenceIterator iter = new LineSentenceIterator(resource.getFile());
         iter.setPreProcessor(new SentencePreProcessor() {
@@ -36,44 +45,42 @@ public class GloveExample {
             }
         });
 
-
+        log.info("Tokenize data....");
         InMemoryLookupCache cache = new InMemoryLookupCache();
-        TokenizerFactory t = new DefaultTokenizerFactory();
+        TokenizerFactory tokenizer = new DefaultTokenizerFactory();
         TextVectorizer  tfidf = new TfidfVectorizer.Builder()
-                .cache(cache).iterate(iter).minWords(1).tokenize(t).build();
+                .cache(cache).iterate(iter).minWords(1).tokenize(tokenizer).build();
         tfidf.fit();
-        final EndingPreProcessor preProcessor = new EndingPreProcessor();
-        t.setTokenPreProcessor(preProcessor);
+        tokenizer.setTokenPreProcessor(preProcessor);
 
-        int layerSize = 300;
-        Nd4j.ENFORCE_NUMERICAL_STABILITY = true;
-        CoOccurrences c = new CoOccurrences.Builder()
-                .cache(cache).iterate(iter).tokenizer(t).build();
-
-        c.fit();
+        log.info("Build model....");
+        CoOccurrences coOccur = new CoOccurrences.Builder()
+                .cache(cache).iterate(iter).tokenizer(tokenizer).build();
+        coOccur.fit();
 
         GloveWeightLookupTable table = new GloveWeightLookupTable.Builder()
                 .cache(cache).lr(0.005).build();
 
         Glove vec = new Glove.Builder().learningRate(0.005).batchSize(1000)
-                .cache(cache).coOccurrences(c).cache(cache)
+                .cache(cache).coOccurrences(coOccur).cache(cache)
                 .iterations(30).vectorizer(tfidf).weights(table)
-                .layerSize(layerSize).iterate(iter).tokenizer(t).minWordFrequency(1).symmetric(true)
+                .layerSize(layerSize).iterate(iter).tokenizer(tokenizer).minWordFrequency(1).symmetric(true)
                 .windowSize(15).build();
+
+        log.info("Train model....");
         vec.fit();
 
-
-
+        log.info("Evaluate model....");
         Collection<String> similar = vec.wordsNearest("day",20);
-        System.out.println(similar);
+        log.info("Similar words to 'day' : " + similar);
 
-        //vec.plotTsne();
+        log.info("Plot TSNE....");
         Tsne tsne = new Tsne.Builder().setMaxIter(200)
                 .learningRate(500).useAdaGrad(false)
                 .normalize(false).usePca(false).build();
         vec.lookupTable().plotVocab(tsne);
-        //Word2VecLoader.writeTsneFormat(vec, tsne.getY(), new File("coords.csv"));
 
+        log.info("****************Example finished********************");
 
 
     }

@@ -1,4 +1,4 @@
-package org.deeplearning4j.tsne;
+package org.deeplearning4j.word2vec;
 
 import org.deeplearning4j.plot.dropwizard.RenderApplication;
 
@@ -8,6 +8,7 @@ import org.deeplearning4j.plot.dropwizard.RenderApplication;
 public class Render {
 
     public static void main(String[] args) {
+
         try {
             RenderApplication.main(args);
         } catch (Exception e) {
