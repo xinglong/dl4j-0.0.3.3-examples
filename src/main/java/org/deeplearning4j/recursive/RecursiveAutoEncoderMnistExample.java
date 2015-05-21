@@ -1,7 +1,6 @@
 package org.deeplearning4j.recursive;
 
 import org.deeplearning4j.datasets.fetchers.MnistDataFetcher;
-import org.deeplearning4j.eval.Evaluation;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.layers.factory.LayerFactories;
@@ -20,12 +19,11 @@ import java.util.Arrays;
 /**
  * Created by willow on 5/11/15.
  */
-public class RecursiveAutoEncoderExample {
+public class RecursiveAutoEncoderMnistExample {
 
-    private static Logger log = LoggerFactory.getLogger(RecursiveAutoEncoderExample.class);
+    private static Logger log = LoggerFactory.getLogger(RecursiveAutoEncoderMnistExample.class);
 
     public static void main(String[] args) throws Exception {
-
 
         log.info("Loading data...");
         MnistDataFetcher fetcher = new MnistDataFetcher(true);

@@ -15,9 +15,9 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CreateDataExample {
+public class RBMCreateDataExample {
 
-    private static Logger log = LoggerFactory.getLogger(CreateDataExample.class);
+    private static Logger log = LoggerFactory.getLogger(RBMCreateDataExample.class);
 
     public static void main(String... args) throws Exception {
         int numFeatures = 614;

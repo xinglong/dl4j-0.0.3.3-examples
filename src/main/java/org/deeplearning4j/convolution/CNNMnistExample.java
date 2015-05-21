@@ -27,9 +27,9 @@ import java.util.Arrays;
 /**
  * Created by willow on 5/11/15.
  */
-public class ConvolutionalExample {
+public class CNNMnistExample {
 
-    private static final Logger log = LoggerFactory.getLogger(ConvolutionalExample.class);
+    private static final Logger log = LoggerFactory.getLogger(CNNMnistExample.class);
 
     public static void main(String[] args) throws Exception {
 

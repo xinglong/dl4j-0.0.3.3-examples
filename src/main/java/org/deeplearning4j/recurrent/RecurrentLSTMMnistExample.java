@@ -1,7 +1,6 @@
 package org.deeplearning4j.recurrent;
 
 import org.deeplearning4j.datasets.fetchers.MnistDataFetcher;
-import org.deeplearning4j.eval.Evaluation;
 import org.deeplearning4j.nn.api.Layer;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.layers.LSTM;
@@ -23,9 +22,9 @@ import java.util.Arrays;
  * Created by willow on 5/11/15.
  */
 
-public class RecurrentLSTMExample {
+public class RecurrentLSTMMnistExample {
 
-    private static Logger log = LoggerFactory.getLogger(RecurrentLSTMExample.class);
+    private static Logger log = LoggerFactory.getLogger(RecurrentLSTMMnistExample.class);
 
     public static void main(String[] args) throws Exception {
 
