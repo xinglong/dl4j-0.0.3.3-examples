@@ -1,17 +1,15 @@
-package org.deeplearning4j.rbm;
+package org.deeplearning4j.deepbelief;
 
 
 import org.deeplearning4j.datasets.iterator.DataSetIterator;
 import org.deeplearning4j.datasets.iterator.impl.IrisDataSetIterator;
 import org.deeplearning4j.eval.Evaluation;
-import org.deeplearning4j.nn.api.Layer;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.distribution.UniformDistribution;
 import org.deeplearning4j.nn.conf.layers.RBM;
 import org.deeplearning4j.nn.conf.override.ClassifierOverride;
-import org.deeplearning4j.nn.layers.factory.LayerFactories;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.api.IterationListener;
@@ -34,9 +32,9 @@ import java.util.Arrays;
  * ? Output layer not a instance of output layer returning ?
  *
  */
-public class RBMIrisExample {
+public class DBNIrisExample {
 
-    private static Logger log = LoggerFactory.getLogger(RBMIrisExample.class);
+    private static Logger log = LoggerFactory.getLogger(DBNIrisExample.class);
 
     public static void main(String[] args) throws IOException {
         // Customizing params
@@ -55,7 +53,7 @@ public class RBMIrisExample {
         DataSet test = testAndTrain.getTest();
 
         log.info("Build model....");
-        NeuralNetConfiguration conf = new NeuralNetConfiguration.Builder()
+        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .layer(new RBM()).nIn(4).nOut(3)
                 .visibleUnit(RBM.VisibleUnit.GAUSSIAN).hiddenUnit(RBM.HiddenUnit.RECTIFIED)
                 .iterations(100).weightInit(WeightInit.DISTRIBUTION).dist(new UniformDistribution(0, 1))
@@ -63,11 +61,20 @@ public class RBMIrisExample {
                 .lossFunction(LossFunctions.LossFunction.RMSE_XENT)
                 .learningRate(1e-1f).momentum(0.9).regularization(true).l2(2e-4)
                 .optimizationAlgo(OptimizationAlgorithm.LBFGS).constrainGradientToUnitNorm(true)
+                .list(2).hiddenLayerSizes(new int[]{3})
+                .override(new ClassifierOverride(1))
                 .build();
-        Layer model = LayerFactories.getFactory(conf.getLayer()).create(conf);
-        model.setIterationListeners(Arrays.asList((IterationListener) new ScoreIterationListener(1)));
+        MultiLayerNetwork model = new MultiLayerNetwork(conf);
+        model.init();
+        model.setListeners(Arrays.asList((IterationListener) new ScoreIterationListener(1)));
 
         log.info("Train model....");
-        model.fit(train.getFeatureMatrix());
+        model.fit(train);
+
+        log.info("Evaluate model....");
+        Evaluation eval = new Evaluation();
+        INDArray output = model.output(test.getFeatureMatrix());
+        eval.eval(test.getLabels(),output);
+        log.info(eval.stats());
     }
 }
