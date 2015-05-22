@@ -1,12 +1,11 @@
 package org.deeplearning4j.rbm;
 
+import org.deeplearning4j.nn.api.Layer;
 import org.deeplearning4j.nn.conf.layers.RBM;
 import org.deeplearning4j.eval.Evaluation;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
-import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.nn.conf.override.ClassifierOverride;
-import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.nn.layers.factory.LayerFactories;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
@@ -42,7 +41,7 @@ public class RBMCreateDataExample {
         DataSet trainingSet = new DataSet(input, labels);
 
         log.info("Build model....");
-        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
+        NeuralNetConfiguration conf = new NeuralNetConfiguration.Builder()
                 .layer(new RBM()).nIn(trainingSet.numInputs()).nOut(trainingSet.numOutcomes())
                 .weightInit(WeightInit.SIZE).iterations(3)
                 .activationFunction("tanh")
@@ -51,26 +50,14 @@ public class RBMCreateDataExample {
                 .lossFunction(LossFunctions.LossFunction.RECONSTRUCTION_CROSSENTROPY)
                 .learningRate(1e-1f)
                 .optimizationAlgo(OptimizationAlgorithm.ITERATION_GRADIENT_DESCENT)
-                .list(2).hiddenLayerSizes(new int[]{400})
-                .override(new ClassifierOverride(3)).build();
-        MultiLayerNetwork model = new MultiLayerNetwork(conf);
+                .build();
+        Layer model = LayerFactories.getFactory(conf).create(conf);
 
         log.info("Train model....");
-        model.fit(trainingSet);
+        model.fit(trainingSet.getFeatureMatrix());
 
-        log.info("Evaluate model....");
-        INDArray predict2 = model.output(trainingSet.getFeatureMatrix());
-        for (int i = 0; i < predict2.rows(); i++) {
-            String actual = trainingSet.getLabels().getRow(i).toString().trim();
-            String predicted = predict2.getRow(i).toString().trim();
-            log.info("actual " + actual + " vs predicted " + predicted);
-        }
+        // Single layer just learns features and can't be supervised. Thus cannot be evaluated.
 
-        Evaluation eval = new Evaluation();
-        eval.eval(trainingSet.getLabels(), predict2);
-        log.info(eval.stats());
-
-        log.info("****************Example finished********************");
 
     }
 }

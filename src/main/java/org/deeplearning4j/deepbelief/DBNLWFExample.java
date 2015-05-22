@@ -1,4 +1,4 @@
-package org.deeplearning4j.rbm;
+package org.deeplearning4j.deepbelief;
 
 
 import org.deeplearning4j.datasets.iterator.DataSetIterator;
@@ -23,8 +23,8 @@ import java.util.Arrays;
 /**
  * Created by agibsonccc on 10/2/14.
  **/
-public class RBMLFWExample {
-    private static Logger log = LoggerFactory.getLogger(RBMLFWExample.class);
+public class DBNLWFExample {
+    private static Logger log = LoggerFactory.getLogger(DBNLWFExample.class);
 
 
     public static void main(String[] args) throws Exception {
