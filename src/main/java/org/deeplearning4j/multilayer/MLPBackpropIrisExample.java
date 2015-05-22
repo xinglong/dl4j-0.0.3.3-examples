@@ -1,4 +1,4 @@
-package org.deeplearning4j.rbm;
+package org.deeplearning4j.multilayer;
 
 
 import org.deeplearning4j.datasets.iterator.DataSetIterator;
