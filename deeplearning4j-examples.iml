@@ -12,6 +12,12 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: org.deeplearning4j:deeplearning4j-ui:0.0.3.3.3.alpha1" level="project" />
+    <orderEntry type="library" name="Maven: org.deeplearning4j:deeplearning4j-nlp:0.0.3.3.3.alpha1" level="project" />
+    <orderEntry type="library" name="Maven: org.deeplearning4j:deeplearning4j-scaleout-akka:0.0.3.3.3.alpha1" level="project" />
+    <orderEntry type="library" name="Maven: org.deeplearning4j:deeplearning4j-scaleout-zookeeper:0.0.3.3.3.alpha1" level="project" />
+    <orderEntry type="library" name="Maven: org.deeplearning4j:deeplearning4j-scaleout-api:0.0.3.3.3.alpha1" level="project" />
+    <orderEntry type="library" name="Maven: org.nd4j:nd4j-jblas:0.0.3.5.5.3" level="project" />
+    <orderEntry type="library" name="Maven: org.deeplearning4j:deeplearning4j-ui:0.0.3.3.3.alpha1" level="project" />
     <orderEntry type="library" name="Maven: io.dropwizard:dropwizard-assets:0.8.0" level="project" />
     <orderEntry type="library" name="Maven: io.dropwizard:dropwizard-core:0.8.0" level="project" />
     <orderEntry type="library" name="Maven: io.dropwizard:dropwizard-util:0.8.0" level="project" />
