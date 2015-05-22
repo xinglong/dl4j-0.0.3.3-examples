@@ -30,6 +30,8 @@ import java.util.List;
  * Recursive Neural Tensor Network (RNTN)
  *
  * Created by willow on 5/11/15.
+ *
+ * Currently in development in progress - not complete yet
  */
 public class RNTNTwitterExample {
     private static final Logger log = LoggerFactory.getLogger(RNTNTwitterExample.class);
